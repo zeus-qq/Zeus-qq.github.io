@@ -1,564 +1,189 @@
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>ZEUSQQ - Slot Online Terbaik</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zeus Gaming Portal</title>
 
-    <!-- Auto Redirect 2 Detik -->
-    <meta http-equiv="refresh" content="2;url=https://travel.aktualonline.co/register?code=eiszlwuaee1756578561">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background: linear-gradient(to bottom, #0a0f2c, #000);
-            color: white;
-        }
-
-        header {
-            background: #111;
-            padding: 15px;
-            text-align: center;
-            font-size: 28px;
-            font-weight: 600;
-            color: gold;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 40px 20px;
-        }
-
-        .hero img {
-            width: 300px;
-            max-width: 90%;
-        }
-
-        .hero h1 {
-            margin-top: 20px;
-            font-size: 32px;
-            color: gold;
-        }
-
-        .btn-group {
-            margin-top: 20px;
-        }
-
-        .btn {
-            padding: 12px 25px;
-            margin: 5px;
-            background: gold;
-            color: black;
-            border: none;
-            border-radius: 30px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .games {
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        .game-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: #1a1f4c;
-            padding: 10px;
-            border-radius: 10px;
-        }
-
-        .card img {
-            width: 100%;
-            border-radius: 10px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 15px;
-            background: #111;
-            margin-top: 30px;
-            font-size: 14px;
-        }
-    </style>
-</head>
-
-<body>
-
-<header>ZEUSQQ</header>
-
-<section class="hero">
-    <img src="https://i.imgur.com/6RL9Y7T.png">
-    <h1>Redirecting ke halaman daftar...</h1>
-
-    <div class="btn-group">
-        <button class="btn" onclick="goLink()">LOGIN</button>
-        <button class="btn" onclick="goLink()">DAFTAR</button>
-    </div>
-</section>
-
-<section class="games">
-    <div class="game-list">
-        <div class="card">
-            <img src="https://i.imgur.com/JQ9X1zM.jpg">
-            <p>Gates of Olympus</p>
-        </div>
-        <div class="card">
-            <img src="https://i.imgur.com/YQb8Z8G.jpg">
-            <p>Sweet Bonanza</p>
-        </div>
-    </div>
-</section>
-
-<footer>
-    © 2026 ZEUSQQ
-</footer>
-
-<script>
-function goLink() {
-    window.location.href = "https://travel.aktualonline.co/register?code=eiszlwuaee1756578561";
+<style>
+body{
+    margin:0;
+    font-family:Poppins;
+    background:#0b0f2a;
+    color:white;
 }
-</script>
 
-</body>
-</html>            width: 300px;
-            max-width: 90%;
-        }
+/* NAVBAR */
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    padding:15px 20px;
+    background:#111;
+    align-items:center;
+}
+.logo{
+    color:gold;
+    font-weight:700;
+    font-size:22px;
+}
+.menu a{
+    color:white;
+    margin:0 10px;
+    text-decoration:none;
+    font-size:14px;
+}
+.btn-nav{
+    background:gold;
+    color:black;
+    padding:8px 15px;
+    border-radius:20px;
+    text-decoration:none;
+    font-weight:600;
+}
 
-        .hero h1 {
-            margin-top: 20px;
-            font-size: 32px;
-            color: gold;
-        }
+/* HERO */
+.hero{
+    text-align:center;
+    padding:50px 20px;
+    background:linear-gradient(to bottom,#1a1f4c,#000);
+}
+.hero img{
+    width:280px;
+}
+.hero h1{
+    color:gold;
+    margin-top:20px;
+}
+.hero p{
+    opacity:0.8;
+}
+.cta{
+    margin-top:20px;
+}
+.cta a{
+    display:inline-block;
+    margin:5px;
+    padding:12px 25px;
+    border-radius:30px;
+    text-decoration:none;
+    font-weight:600;
+}
+.login{background:gold;color:black;}
+.register{background:orange;color:black;}
 
-        .btn-group {
-            margin-top: 20px;
-        }
+/* FEATURES */
+.features{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:15px;
+    padding:30px;
+}
+.feature{
+    background:#1a1f4c;
+    padding:15px;
+    border-radius:10px;
+    text-align:center;
+}
 
-        .btn {
-            padding: 12px 25px;
-            margin: 5px;
-            background: gold;
-            color: black;
-            border: none;
-            border-radius: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+/* GAMES */
+.games{
+    padding:30px;
+}
+.games h2{
+    color:gold;
+}
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:15px;
+}
+.card{
+    background:#1a1f4c;
+    padding:10px;
+    border-radius:10px;
+    text-align:center;
+}
+.card img{
+    width:100%;
+    border-radius:10px;
+}
 
-        .btn:hover {
-            background: orange;
-        }
-
-        .games {
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        .games h2 {
-            margin-bottom: 20px;
-            color: gold;
-        }
-
-        .game-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: #1a1f4c;
-            padding: 10px;
-            border-radius: 10px;
-            transition: 0.3s;
-        }
-
-        .card:hover {
-            transform: scale(1.05);
-        }
-
-        .card img {
-            width: 100%;
-            border-radius: 10px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 15px;
-            background: #111;
-            margin-top: 30px;
-            font-size: 14px;
-        }
-    </style>
+/* FOOTER */
+.footer{
+    background:#111;
+    padding:20px;
+    text-align:center;
+    font-size:12px;
+}
+</style>
 </head>
 
 <body>
 
-<header>ZEUSQQ</header>
-
-<section class="hero">
-    <img src="https://i.imgur.com/6RL9Y7T.png">
-    <h1>Main Slot Gacor Zeus Hari Ini!</h1>
-
-    <div class="btn-group">
-        <button class="btn" onclick="goLink()">LOGIN</button>
-        <button class="btn" onclick="goLink()">DAFTAR</button>
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">ZEUSQQ</div>
+    <div class="menu">
+        <a href="#">Home</a>
+        <a href="#">Games</a>
+        <a href="#">Promo</a>
     </div>
-</section>
+    <a class="btn-nav" href="https://travel.aktualonline.co/register?code=eiszlwuaee1756578561">Login</a>
+</div>
 
-<section class="games">
+<!-- HERO -->
+<div class="hero">
+    <img src="https://i.imgur.com/6RL9Y7T.png">
+    <h1>Portal Game Zeus</h1>
+    <p>Halaman demo/landing untuk akses game & hiburan bertema Zeus</p>
+
+    <div class="cta">
+        <a class="login" href="https://travel.aktualonline.co/register?code=eiszlwuaee1756578561">LOGIN</a>
+        <a class="register" href="https://travel.aktualonline.co/register?code=eiszlwuaee1756578561">DAFTAR</a>
+    </div>
+</div>
+
+<!-- FEATURES -->
+<div class="features">
+    <div class="feature">⚡ Akses Cepat</div>
+    <div class="feature">🎮 Banyak Game</div>
+    <div class="feature">📱 Mobile Friendly</div>
+    <div class="feature">🔒 Aman</div>
+</div>
+
+<!-- GAMES -->
+<div class="games">
     <h2>Game Populer</h2>
-    <div class="game-list">
-        
+    <div class="grid">
+
         <div class="card">
             <img src="https://i.imgur.com/JQ9X1zM.jpg">
-            <p>Gates of Olympus</p>
+            <p>Olympus</p>
         </div>
 
         <div class="card">
             <img src="https://i.imgur.com/YQb8Z8G.jpg">
-            <p>Sweet Bonanza</p>
+            <p>Sweet</p>
         </div>
 
         <div class="card">
             <img src="https://i.imgur.com/7RLK4pM.jpg">
-            <p>Starlight Princess</p>
+            <p>Princess</p>
         </div>
 
         <div class="card">
             <img src="https://i.imgur.com/6RL9Y7T.png">
-            <p>Zeus Deluxe</p>
+            <p>Zeus</p>
         </div>
 
     </div>
-</section>
-
-<footer>
-    © 2026 ZEUSQQ - All Rights Reserved
-</footer>
-
-<script>
-function goLink() {
-    window.location.href = "https://travel.aktualonline.co/register?code=eiszlwuaee1756578561";
-}
-</script>
-
-</body>
-</html>        }
-
-        .hero img {
-            width: 300px;
-            max-width: 90%;
-        }
-
-        .hero h1 {
-            margin-top: 20px;
-            font-size: 32px;
-            color: gold;
-        }
-
-        .btn {
-            margin-top: 20px;
-            padding: 12px 25px;
-            background: gold;
-            color: black;
-            border: none;
-            border-radius: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn:hover {
-            background: orange;
-        }
-
-        .games {
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        .games h2 {
-            margin-bottom: 20px;
-            color: gold;
-        }
-
-        .game-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: #1a1f4c;
-            padding: 10px;
-            border-radius: 10px;
-            transition: 0.3s;
-        }
-
-        .card:hover {
-            transform: scale(1.05);
-        }
-
-        .card img {
-            width: 100%;
-            border-radius: 10px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 15px;
-            background: #111;
-            margin-top: 30px;
-            font-size: 14px;
-        }
-    </style>
-</head>
-<body>
-
-<header>ZEUSQQ</header>
-
-<section class="hero">
-    <img src="https://i.imgur.com/6RL9Y7T.png" alt="Zeus Slot">
-    <h1>Main Slot Gacor Zeus Hari Ini!</h1>
-    <button class="btn">LOGIN SEKARANG</button>
-</section>
-
-<section class="games">
-    <h2>Game Populer</h2>
-    <div class="game-list">
-        
-        <div class="card">
-            <img src="https://i.imgur.com/JQ9X1zM.jpg">
-            <p>Gates of Olympus</p>
-        </div>
-
-        <div class="card">
-            <img src="https://i.imgur.com/YQb8Z8G.jpg">
-            <p>Sweet Bonanza</p>
-        </div>
-
-        <div class="card">
-            <img src="https://i.imgur.com/7RLK4pM.jpg">
-            <p>Starlight Princess</p>
-        </div>
-
-        <div class="card">
-            <img src="https://i.imgur.com/EXAMPLE.jpg">
-            <p>Zeus Deluxe</p>
-        </div>
-
-    </div>
-</section>
-
-<footer>
-    © 2026 ZEUSQQ - All Rights Reserved
-</footer>
-
-</body>
-</html>
-⚡ Fitur yang sudah ada:
-Tampilan dark + gold (tema Zeus)
-
-Hero banner dengan gambar Zeus
-
-Tombol login
-
-Grid game slot populer
-
-Responsive (HP & desktop)
-
-🔥 Kalau mau upgrade:
-Bisa saya bantu bikin versi lebih PRO:
-
-Animasi (glow, lightning ⚡)
-
-Login form + backend PHP
-
-Live RTP / statistik
-
-Tampilan seperti web asli (mirip provider besar)
-
-Auto redirect / landing page iklan
-
-Tinggal bilang: “upgrade pro max” 👍
-
-
-Bagian login dan daftar ketika di klik  redirect ke https://travel.aktualonline.co/register?code=eiszlwuaee1756578561
-
-Berikut versi index.html yang sudah saya update — tombol LOGIN dan DAFTAR akan redirect ke link yang kamu kasih.
-
-📄 index.html (updated)
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>ZEUSQQ - Slot Online Terbaik</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background: linear-gradient(to bottom, #0a0f2c, #000);
-            color: white;
-        }
-
-        header {
-            background: #111;
-            padding: 15px;
-            text-align: center;
-            font-size: 28px;
-            font-weight: 600;
-            color: gold;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 40px 20px;
-        }
-
-        .hero img {
-            width: 300px;
-            max-width: 90%;
-        }
-
-        .hero h1 {
-            margin-top: 20px;
-            font-size: 32px;
-            color: gold;
-        }
-
-        .btn-group {
-            margin-top: 20px;
-        }
-
-        .btn {
-            padding: 12px 25px;
-            margin: 5px;
-            background: gold;
-            color: black;
-            border: none;
-            border-radius: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn:hover {
-            background: orange;
-        }
-
-        .games {
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        .games h2 {
-            margin-bottom: 20px;
-            color: gold;
-        }
-
-        .game-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: #1a1f4c;
-            padding: 10px;
-            border-radius: 10px;
-            transition: 0.3s;
-        }
-
-        .card:hover {
-            transform: scale(1.05);
-        }
-
-        .card img {
-            width: 100%;
-            border-radius: 10px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 15px;
-            background: #111;
-            margin-top: 30px;
-            font-size: 14px;
-        }
-    </style>
-</head>
-<body>
-
-<header>ZEUSQQ</header>
-
-<section class="hero">
-    <img src="https://i.imgur.com/6RL9Y7T.png" alt="Zeus Slot">
-    <h1>Main Slot Gacor Zeus Hari Ini!</h1>
-
-    <div class="btn-group">
-        <button class="btn" onclick="redirectLink()">LOGIN</button>
-        <button class="btn" onclick="redirectLink()">DAFTAR</button>
-    </div>
-</section>
-
-<section class="games">
-    <h2>Game Populer</h2>
-    <div class="game-list">
-        
-        <div class="card">
-            <img src="https://i.imgur.com/JQ9X1zM.jpg">
-            <p>Gates of Olympus</p>
-        </div>
-
-        <div class="card">
-            <img src="https://i.imgur.com/YQb8Z8G.jpg">
-            <p>Sweet Bonanza</p>
-        </div>
-
-        <div class="card">
-            <img src="https://i.imgur.com/7RLK4pM.jpg">
-            <p>Starlight Princess</p>
-        </div>
-
-        <div class="card">
-            <img src="https://i.imgur.com/6RL9Y7T.png">
-            <p>Zeus Deluxe</p>
-        </div>
-
-    </div>
-</section>
-
-<footer>
-    © 2026 ZEUSQQ - All Rights Reserved
-</footer>
-
-<script>
-function redirectLink() {
-    window.location.href = "https://travel.aktualonline.co/register?code=eiszlwuaee1756578561";
-}
-</script>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+© 2026 Zeus Portal — Halaman ini adalah landing/demo, bukan situs resmi game/provider.
+</div>
 
 </body>
 </html>
